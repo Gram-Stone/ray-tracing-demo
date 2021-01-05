@@ -10,6 +10,8 @@
          "sphere.rkt"
          "toplevel.rkt")
 
+(provide main)
+
 ;;array of pixel locations
 (define c (my-cartesian-product (range (/ (- cw) 2) (/ cw 2))
                                 (range (/ (- ch) 2) (/ ch 2))))
@@ -56,21 +58,22 @@
       BACKGROUND-COLOR
       (sphere-color closest-sphere)))
 
-(new canvas%
-     [parent f]
-     [paint-callback
-      (λ (canvas dc)
-        (for-each (λ (x)
-                    (define D (canvas->viewport (car x) (cdr x)))
-                    (send* dc
-                      (set-pen (send the-pen-list
-                                     find-or-create-pen
-                                     (trace-ray O
-                                                D
-                                                1
-                                                +inf.0)
-                                     2
-                                     'solid))
-                      (draw-point (car (canvas->canvas% (car x) (cdr x))) (cdr (canvas->canvas% (car x) (cdr x))))))
-                  c))])
-(send f show #t)
+(define (main)
+  (new canvas%
+       [parent f]
+       [paint-callback
+        (λ (canvas dc)
+          (for-each (λ (x)
+                      (define D (canvas->viewport (car x) (cdr x)))
+                      (send* dc
+                        (set-pen (send the-pen-list
+                                       find-or-create-pen
+                                       (trace-ray O
+                                                  D
+                                                  1
+                                                  +inf.0)
+                                       2
+                                       'solid))
+                        (draw-point (car (canvas->canvas% (car x) (cdr x))) (cdr (canvas->canvas% (car x) (cdr x))))))
+                    c))])
+  (send f show #t))
