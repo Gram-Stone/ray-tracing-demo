@@ -1,0 +1,19 @@
+#lang racket/base
+
+(require racket/math)
+
+(provide (all-defined-out))
+
+(define (my-cartesian-product lst1 lst2)(apply append
+                                            (for/list ([i lst1])
+                                              (for/list ([j lst2])
+                                                (cons i j)))))
+
+(define (discriminant a b c)
+  (- (sqr b) (* 4 a c)))
+
+(define (dot-product lst1 lst2)
+  (apply + (map * lst1 lst2)))
+
+(define (list- lst1 lst2)
+  (map - lst1 lst2))
