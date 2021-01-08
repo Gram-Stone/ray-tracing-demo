@@ -7,6 +7,6 @@
 (provide f)
 
 (define f (new frame%
-               [label "Raytracing Demo"]
+               [label "Ray Tracing Demo"]
                [width cw]
                [height ch]))

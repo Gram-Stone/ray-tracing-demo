@@ -26,9 +26,9 @@
   (send f show #t))
 
 ;;converts canvas coordinates to viewport coordinates
-(define (canvas->viewport cx cy)
-  (list (* cx (/ vw cw))
-        (- (* cy (/ vh ch)))
+(define (canvas->viewport x y)
+  (list (* x (/ vw cw))
+        (- (* y (/ vh ch)))
         d))
 
 ;;computes intersection(s) of ray with spheres, if one exists

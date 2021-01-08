@@ -4,11 +4,6 @@
 
 (provide (all-defined-out))
 
-(define (my-cartesian-product lst1 lst2)(apply append
-                                            (for/list ([i lst1])
-                                              (for/list ([j lst2])
-                                                (cons i j)))))
-
 (define (discriminant a b c)
   (- (sqr b) (* 4 a c)))
 
