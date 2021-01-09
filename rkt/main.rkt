@@ -35,17 +35,17 @@
 
 ;;computes intersection(s) of ray with spheres, if one exists
 (define (intersect-ray-sphere O D sphere)
-  (define C (sphere-center sphere))
-  (define r (sphere-radius sphere))
-  (define OC (list- O C))
-  (define k1 (dot-product D D))
-  (define k2 (* 2 (dot-product OC D)))
-  (define k3 (- (dot-product OC OC) (* r r)))
-  (define disc (discriminant k1 k2 k3))
-  (if (negative? disc)
-      (values +inf.0 +inf.0)
-      (values (/ (+ (- k2) (sqrt disc)) (* 2 k1))
-              (/ (- (- k2) (sqrt disc)) (* 2 k1)))))
+  (let* ([C (sphere-center sphere)]
+         [r (sphere-radius sphere)]
+         [OC (list- O C)]
+         [k1 (dot-product D D)]
+         [k2 (* 2 (dot-product OC D))]
+         [k3 (- (dot-product OC OC) (* r r))]
+         [disc (discriminant k1 k2 k3)])
+    (if (negative? disc)
+        (values +inf.0 +inf.0)
+        (values (/ (+ (- k2) (sqrt disc)) (* 2 k1))
+                (/ (- (- k2) (sqrt disc)) (* 2 k1))))))
 
 ;;computes the intersection of ray with every sphere and returns the color of the sphere at the nearest intersection inside the requested range of t
 (define (trace-ray O D t-min t-max)
@@ -84,4 +84,3 @@
                                        n-dot-l)
                                     (* (v-length N) (v-length L)))))))]))
   i)
-                                    
