@@ -5,7 +5,9 @@
          racket/list
          "colors.rkt"
          "constants.rkt"
+         "light.rkt"
          "math.rkt"
+         "my-scene.rkt"
          "scene.rkt"
          "sphere.rkt"
          "toplevel.rkt")
@@ -27,9 +29,9 @@
 
 ;;converts canvas coordinates to viewport coordinates
 (define (canvas->viewport x y)
-  (list (* x (/ vw cw))
-        (- (* y (/ vh ch)))
-        d))
+  (list (* x (/ (scene-viewport-width my-scene) cw))
+        (- (* y (/ (scene-viewport-height my-scene) ch)))
+        (scene-projection-plane-distance my-scene)))
 
 ;;computes intersection(s) of ray with spheres, if one exists
 (define (intersect-ray-sphere O D sphere)
@@ -57,7 +59,29 @@
               (when (and (and (> t2 t-min) (< t2 t-max)) (< t2 closest-t))
                 (set! closest-t t2)
                 (set! closest-sphere sphere)))
-            scene)
+            (scene-objects my-scene))
   (if (void? closest-sphere)
       BACKGROUND-COLOR
-      (sphere-color closest-sphere)))
+      (let* ([P (list+ O (scalar-multiplication closest-t D))]
+             [N (list- P (sphere-center closest-sphere))]
+             [N (scalar-multiplication (/ 1 (length N)) N)])
+        (intensify (sphere-color closest-sphere) (compute-lighting P N)))))
+        
+
+;computes lighting
+(define (compute-lighting P N)
+  (define i 0.0)
+  (for ([light (scene-lights my-scene)])
+    (cond [(ambient-light? light) (set! i (+ i (ambient-light-intensity light)))]
+          [else (let* ([L (cond [(point-light? light) (list- (point-light-position light) P)]
+                                [else (directional-light-direction light)])]
+                       [n-dot-l (dot-product N L)])
+                  (when (positive? n-dot-l)
+                    (set! i (+ i (/ (* ((if (point-light? light)
+                                            point-light-intensity
+                                            directional-light-intensity)
+                                        light)
+                                       n-dot-l)
+                                    (* (v-length N) (v-length L)))))))]))
+  i)
+                                    
