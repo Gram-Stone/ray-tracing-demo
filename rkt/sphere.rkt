@@ -4,4 +4,5 @@
 
 (struct sphere (center
                 radius
-                color))
+                color
+                specular))
