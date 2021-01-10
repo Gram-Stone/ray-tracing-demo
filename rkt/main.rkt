@@ -2,7 +2,6 @@
 
 (require racket/class
          racket/gui/base
-         racket/list
          "colors.rkt"
          "constants.rkt"
          "light.rkt"
@@ -68,12 +67,13 @@
         (intensify (sphere-color closest-sphere) (compute-lighting P N)))))
         
 
-;computes lighting
+;;computes lighting
 (define (compute-lighting P N)
   (define i 0.0)
   (for ([light (scene-lights my-scene)])
-    (cond [(ambient-light? light) (set! i (+ i (ambient-light-intensity light)))]
-          [else (let* ([L (cond [(point-light? light) (list- (point-light-position light) P)]
+    (if (ambient-light? light)
+        (set! i (+ i (ambient-light-intensity light)))
+        (let* ([L (cond [(point-light? light) (list- (point-light-position light) P)]
                                 [else (directional-light-direction light)])]
                        [n-dot-l (dot-product N L)])
                   (when (positive? n-dot-l)
@@ -82,5 +82,5 @@
                                             directional-light-intensity)
                                         light)
                                        n-dot-l)
-                                    (* (v-length N) (v-length L)))))))]))
+                                    (* (v-length N) (v-length L)))))))))
   i)

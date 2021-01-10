@@ -1,8 +1,9 @@
 #lang racket/base
 
-(require racket/math)
-
 (provide (all-defined-out))
+
+(define (sqr x)
+  (* x x))
 
 (define (discriminant a b c)
   (- (sqr b) (* 4 a c)))
