@@ -73,14 +73,15 @@
   (for ([light (scene-lights my-scene)])
     (if (ambient-light? light)
         (set! i (+ i (ambient-light-intensity light)))
-        (let* ([L (cond [(point-light? light) (list- (point-light-position light) P)]
-                                [else (directional-light-direction light)])]
-                       [n-dot-l (dot-product N L)])
-                  (when (positive? n-dot-l)
-                    (set! i (+ i (/ (* ((if (point-light? light)
-                                            point-light-intensity
-                                            directional-light-intensity)
-                                        light)
-                                       n-dot-l)
-                                    (* (v-length N) (v-length L)))))))))
+        (let* ([L (if (point-light? light)
+                      (list- (point-light-position light) P)
+                      (directional-light-direction light))]
+               [n-dot-l (dot-product N L)])
+          (when (positive? n-dot-l)
+            (set! i (+ i (/ (* ((if (point-light? light)
+                                    point-light-intensity
+                                    directional-light-intensity)
+                                light)
+                               n-dot-l)
+                            (* (v-length N) (v-length L)))))))))
   i)
