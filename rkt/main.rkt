@@ -19,11 +19,11 @@
        [parent f]
        [paint-callback (λ (canvas dc)
                          (send dc set-origin (/ cw 2) (/ ch 2))
-                         (for ([i (in-range (- (/ cw 2)) (/ cw 2))])
-                           (for ([j (in-range (- (/ ch 2)) (/ ch 2))])
-                             (send* dc
-                               (set-pen (send the-pen-list find-or-create-pen (trace-ray O (canvas->viewport i j) 1 +inf.0) 2 'solid))
-                               (draw-point i j)))))])
+                         (for* ([i (in-range (- (/ cw 2)) (/ cw 2))]
+                                [j (in-range (- (/ ch 2)) (/ ch 2))])
+                           (send* dc
+                             (set-pen (send the-pen-list find-or-create-pen (trace-ray O (canvas->viewport i j) 1 +inf.0) 2 'solid))
+                             (draw-point i j))))])
   (send f show #t))
 
 ;;converts canvas coordinates to viewport coordinates
